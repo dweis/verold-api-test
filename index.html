@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Test API</title>
+<title>Minimal Demo</title>
 <style type="text/css">
 body { margin: 0 auto; padding: 0; }
 #container { width: 100%; height: 100%; }
@@ -11,45 +11,48 @@ body, html, canvas { width:100%; height:100%; }
 <script type="text/javascript" src="javascripts/verold_api_v1.js"></script>
 <script>
 VAPI.onReady(function() {
-  var veroldEngine, mainScene, camera, model, rotation = 0;
-
-  var projectId = '511d40a6d21ebe02000000bd'
+  var veroldEngine = undefined
+    , camera = undefined
+    , model = undefined
+    , rotation = 0
+    , projectId = '511d40a6d21ebe02000000bd'
     , mainSceneId = '511d40a6d21ebe02000000bf'
     , modelInstanceId = '511d40bdd21ebe02000000c5'
     , $el = $('#container');
 
-  VAPI.loadProject(projectId, function(err, project, assets) {
-    veroldEngine = new VAPI.VeroldEngine({
-      "engineName" : "MinimalDemo",
-      "el" : $el
-    });
-
-    veroldEngine.initialize( {
-      "entities": assets,
-      "mainProgramContext" : this,
-      "mainUpdateFunction" : function(delta) {
-        if (model) {
-          rotation += delta * 0.2;
-          model.threeData.quaternion.setFromEuler( { x: 0, y: rotation, z: 0 } );
-        }
-      },
-      "handleInput" : false,
-      "projectId" : projectId,
-      "enablePostProcess" : false,
-      "enableEditorTools" : false,
-      "clearColor" : 0x222222,
-    });
-
+  var init = function(scene) {
     mainScene = veroldEngine.assetRegistry.Scenes.getAsset(mainSceneId);
+
+    model = mainScene.getObject(modelInstanceId);
 
     camera = new THREE.PerspectiveCamera(30, 1.8, 0.01, 1500);
     camera.position.set(0, 0.5, 3); 
 
-    veroldEngine.loadScene(mainSceneId, { success_hierarchy: function(scene) {
-      model = mainScene.getObject(modelInstanceId);
+    veroldEngine.setActiveCamera(camera);
+  }
 
-      veroldEngine.setActiveCamera(camera);
-    }});
+  var update = function(delta) {
+    if (!model) return;
+
+    rotation += delta * 0.5;
+    model.threeData.quaternion.setFromEuler({ x: 0, y: rotation, z: 0 });
+  }
+
+  VAPI.loadProject(projectId, function(err, project, assets) {
+    veroldEngine = new VAPI.VeroldEngine({ "engineName" : "MinimalDemo", "el" : $el });
+
+    veroldEngine.initialize({
+      "entities": assets,
+      "handleInput" : false,
+      "projectId" : projectId,
+      "enablePostProcess" : true,
+      "enableEditorTools" : false,
+      "clearColor" : 0x222222,
+    });
+
+    veroldEngine.on('update', update);
+
+    veroldEngine.loadScene(mainSceneId, { success_hierarchy: init })
   });
 });
 </script>
