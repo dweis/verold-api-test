@@ -15,9 +15,9 @@ VAPI.onReady(function() {
     , camera = undefined
     , model = undefined
     , rotation = 0
-    , projectId = '511d40a6d21ebe02000000bd'
-    , mainSceneId = '511d40a6d21ebe02000000bf'
-    , modelInstanceId = '511d40bdd21ebe02000000c5'
+    , projectId = '51252a7a7806540200000009'
+    , mainSceneId = '51252a7a780654020000000b'
+    , modelInstanceId = '51252aca030a8a0200000371'
     , $el = $('#container');
 
   var init = function(scene) {
@@ -26,7 +26,7 @@ VAPI.onReady(function() {
     model = mainScene.getObject(modelInstanceId);
 
     camera = new THREE.PerspectiveCamera(30, 1.8, 0.01, 1500);
-    camera.position.set(0, 0.5, 3); 
+    camera.position.set(0, 0.5, 4);
 
     veroldEngine.setActiveCamera(camera);
   }
@@ -35,7 +35,7 @@ VAPI.onReady(function() {
     if (!model) return;
 
     rotation += delta * 0.5;
-    model.threeData.quaternion.setFromEuler({ x: 0, y: rotation, z: 0 });
+    model.threeData.quaternion.setFromEuler({ x: -rotation, y: rotation, z: 0 });
   }
 
   VAPI.loadProject(projectId, function(err, project, assets) {
