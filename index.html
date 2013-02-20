@@ -16,21 +16,7 @@ VAPI.onReady(function() {
   var projectId = '511d40a6d21ebe02000000bd'
     , mainSceneId = '511d40a6d21ebe02000000bf'
     , modelInstanceId = '511d40bdd21ebe02000000c5'
-    , $el = $('#container')
-    , cameraJSON = {
-        id: "default_camera",
-        type: "camera",
-        name: "default_camera",
-        payload: {
-          "type": "PerspectiveCamera",
-          "fov": 50,
-          "aspect" : 1.667,
-          "near" : 0.01,
-          "far" : 20000,
-          "orientation" : { x: 0, y: 0, z: 0, w: 1},
-          "position" : { x: 0, y: 0, z: 2.5 },
-        }
-      };
+    , $el = $('#container');
 
   VAPI.loadProject(projectId, function(err, project, assets) {
     veroldEngine = new VAPI.VeroldEngine({
